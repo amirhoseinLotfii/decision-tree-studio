@@ -33,7 +33,7 @@ function Evidence({ doc, option, t }: { doc: DecisionDocument; option: Option; t
             ) : (
               <h4>{source.title}</h4>
             )}
-            <p>{source.claim}</p>
+            <p dir="auto">{source.claim}</p>
           </article>
         ))
       )}
@@ -53,39 +53,43 @@ function OptionExplanation({
     <>
       <section className="selected-summary">
         <span className="eyebrow">{t('selected')}</span>
-        <h3>{option.label}</h3>
-        {option.description ? <p>{option.description}</p> : null}
+        <h3 dir={doc.direction}>{option.label}</h3>
+        {option.description ? <p dir={doc.direction}>{option.description}</p> : null}
       </section>
       <div className="tradeoffs">
         <FieldCard title={t('benefit')} tone="benefit">
           <ul>
             {option.benefits.map((text) => (
-              <li key={text}>{text}</li>
+              <li key={text} dir={doc.direction}>
+                {text}
+              </li>
             ))}
           </ul>
         </FieldCard>
         <FieldCard title={t('risk')} tone="risk">
           <ul>
             {option.risks.map((text) => (
-              <li key={text}>{text}</li>
+              <li key={text} dir={doc.direction}>
+                {text}
+              </li>
             ))}
           </ul>
         </FieldCard>
       </div>
       {option.example ? (
         <FieldCard title={t('example')} tone="info">
-          <p>{option.example}</p>
+          <p dir={doc.direction}>{option.example}</p>
         </FieldCard>
       ) : null}
       {option.outcome ? (
         <FieldCard title={t('outcome')}>
-          <p>{option.outcome}</p>
+          <p dir={doc.direction}>{option.outcome}</p>
         </FieldCard>
       ) : null}
       {option.rationale ? (
         <section className="rationale">
           <h3>{t('rationale')}</h3>
-          <p>{option.rationale}</p>
+          <p dir={doc.direction}>{option.rationale}</p>
         </section>
       ) : null}
       <Evidence doc={doc} option={option} t={t} />
@@ -177,7 +181,7 @@ export function QuestionDialog({
       description={question?.prompt ?? t('groupHelp')}
       wide
     >
-      <div dir={doc.direction} key={node.id}>
+      <div key={node.id}>
         <div className="question-meta">
           <bdi className="code-badge">{node.id}</bdi>
           {state ? (
@@ -210,7 +214,9 @@ export function QuestionDialog({
                 <p>{t('inactiveHelp')}</p>
               </div>
             </section>
-            <h3 className="section-heading">{question.prompt}</h3>
+            <h3 className="section-heading" dir={doc.direction}>
+              {question.prompt}
+            </h3>
             {question.when ? (
               <FieldCard title={t('expectedChoice')}>
                 <p>{t(question.when.mode === 'all' ? 'allRules' : 'anyRules')}</p>
@@ -251,11 +257,11 @@ export function QuestionDialog({
           <>
             <section className="question-card">
               <span className="eyebrow">{t('question')}</span>
-              <h2>{question.prompt}</h2>
+              <h2 dir={doc.direction}>{question.prompt}</h2>
             </section>
             {question.example ? (
               <FieldCard title={t('example')} tone="info">
-                <p>{question.example}</p>
+                <p dir={doc.direction}>{question.example}</p>
               </FieldCard>
             ) : null}
             {question.when ? (

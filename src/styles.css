@@ -651,7 +651,7 @@ progress::-moz-progress-bar {
   max-height: calc(100dvh - 48px);
   display: flex;
   flex-direction: column;
-  z-index: 51;
+  z-index: 50;
   border: 1px solid var(--border);
   border-radius: 20px;
   background: var(--panel);
@@ -1377,4 +1377,47 @@ progress::-moz-progress-bar {
 }
 [dir='rtl'] .toast {
   transform: none;
+}
+
+/* Portalled selects inherit the active theme, font and direction via Radix. */
+[data-slot='select-trigger'] {
+  min-height: 44px;
+  min-width: 148px;
+}
+[data-slot='select-content'] {
+  font-family: inherit;
+  max-width: calc(100vw - 24px);
+}
+.menu-section > [data-slot='select-trigger'] {
+  width: 100%;
+  margin-bottom: 12px;
+}
+[data-slot='select-item'] {
+  min-height: 38px;
+}
+[data-slot='select-trigger'] > [data-slot='select-value'] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .workspace-toolbar > [data-slot='select-trigger'] {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+[data-slot='select-item'] bdi {
+  overflow-wrap: anywhere;
+  white-space: normal;
+  text-align: start;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='select-content'] {
+    animation: none !important;
+  }
+}
+:root[data-animations='off'] [data-slot='select-content'] {
+  animation: none !important;
 }

@@ -1,3 +1,5 @@
+import { LocalizedSelect } from './LocalizedSelect';
+import { formatNumber } from '../lib/locale';
 import { useStore } from 'zustand';
 import { motion } from 'motion/react';
 import { ChevronDown, FileDown, FolderOpen, PanelTop, RotateCcw, Settings2 } from 'lucide-react';
@@ -37,6 +39,7 @@ export function WorkspaceMenu({
   session: Session;
   t: Translate;
 }) {
+  const language = useStore(workspaceStore, (s) => s.language);
   const documents = useStore(workspaceStore, (s) => s.documents),
     active = useStore(workspaceStore, (s) => s.activeId),
     activate = useStore(workspaceStore, (s) => s.activate),
@@ -52,20 +55,20 @@ export function WorkspaceMenu({
         <label className="sr-only" htmlFor="project-select">
           {t('projects')}
         </label>
-        <select
+        <LocalizedSelect
           id="project-select"
+          label={t('projects')}
           value={active}
-          onChange={(event) => {
-            activate(event.target.value);
+          onValueChange={(value) => {
+            activate(value);
             onClose();
           }}
-        >
-          {Object.values(documents).map((doc) => (
-            <option key={doc.id} value={doc.id}>
-              {doc.title}
-            </option>
-          ))}
-        </select>
+          options={Object.values(documents).map((doc) => ({
+            value: doc.id,
+            label: doc.title,
+            direction: doc.direction,
+          }))}
+        />
         <Button onClick={onImport}>
           <FileDown size={16} />
           {t('import')}
@@ -76,7 +79,7 @@ export function WorkspaceMenu({
         <div className="status-grid">
           {Object.entries(result.counts).map(([status, count]) => (
             <span className={`status-pill ${status}`} key={status}>
-              {t(status as keyof typeof result.counts)} <b>{count}</b>
+              {t(status as keyof typeof result.counts)} <bdi>{formatNumber(language, count)}</bdi>
             </span>
           ))}
         </div>

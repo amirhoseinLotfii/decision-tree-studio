@@ -5,7 +5,7 @@
 | Check           | Actual result                              |
 | --------------- | ------------------------------------------ |
 | `npm run lint`  | exit 0                                     |
-| `npm test`      | exit 0; 5 files / 43 tests                 |
+| `npm test`      | exit 0; 7 files / 53 tests                 |
 | `npm run build` | exit 0; TypeScript and production bundling |
 | `npm run check` | exit 0; sequential lint, tests, build      |
 
@@ -43,3 +43,13 @@ The library accepts documents up to 5,000 nodes; the full size limit is not benc
 ## Status
 
 Automated code checks: PASS. Real-browser UX/accessibility acceptance: NOT TESTED. GitHub publication is tracked separately from local validation and must use the requested account.
+
+## Select and bidirectional interface update
+
+Replaced the two native selects with the shadcn/Radix Select source component. Added explicit direction for portalled menus, logical alignment/indicator placement, semantic theme tokens and reduced-motion-aware popup transitions. Root UI direction follows the persisted interface language; document text retains its own direction and JSON/IDs remain LTR. Progress ratios are bidi-isolated, and forward arrows mirror in RTL. New DOM tests exercise RTL popup direction, pointer/keyboard selection, language toggling, answer preservation, progress order and preference restoration. This remains DOM evidence, not real-browser popup geometry or a visual responsive audit.
+
+## Repository presentation checks
+
+The published minimal starter and both downloadable workflow examples are validated by tests. Downloadable workflow definitions are compared with their bundled counterparts. Relative documentation links were checked (37 targets, no missing files at the time of release preparation). Source/docs were scanned for common GitHub token patterns, private-key markers, machine-specific user paths and the private prototype API/data names; no matches were found. This bounded scan is not a general security audit.
+
+The README hero was inspected as a static image and labelled as concept artwork. The supplied social-preview image is 1280 × 640; uploading it to GitHub's social-preview setting is separate from committing the file.

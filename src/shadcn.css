@@ -1,0 +1,23 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tw-animate-css';
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@source "./components/ui/**/*.tsx";
+@theme inline {
+  --color-background: var(--panel);
+  --color-foreground: var(--text);
+  --color-popover: var(--panel);
+  --color-popover-foreground: var(--text);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-ink);
+  --color-accent: var(--soft);
+  --color-accent-foreground: var(--text);
+  --color-muted-foreground: var(--muted);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--accent);
+  --color-destructive: var(--red);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}

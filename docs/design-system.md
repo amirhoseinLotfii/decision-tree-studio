@@ -9,3 +9,5 @@ Dialogs use Radix semantics, Escape/outside-click dismissal, focus trapping and 
 Motion handles modal/sidebar entrance/exit, selected-option transitions, button press feedback, note badges and notifications. OS reduced-motion and the application animation preference suppress movement and timing. CSS transitions also respect OS reduced-motion.
 
 Automated DOM tests are not visual proof. Manual narrow-screen, zoom, contrast, touch and screen-reader testing remains required before a production accessibility claim.
+
+Select controls use the shadcn/Radix Select component and semantic theme tokens. Their menu surfaces render through portals with explicit interface direction, including logical placement of selection indicators. Tailwind utilities are scoped to the shadcn component sources, without enabling global preflight, so existing canvas and modal styles remain stable. UI language is independent of document language; importing content does not overwrite the current interface-language preference.

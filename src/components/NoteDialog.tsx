@@ -44,6 +44,7 @@ export function NoteDialog({
       </label>
       <textarea
         id="note-text"
+        dir="auto"
         rows={7}
         maxLength={20_000}
         value={value}

@@ -14,7 +14,10 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src", "tests", "vite.config.ts"]
 }

@@ -1,7 +1,10 @@
+import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   base: './',
   test: { environment: 'jsdom', setupFiles: ['./tests/setup.ts'], restoreMocks: true },
   build: {
