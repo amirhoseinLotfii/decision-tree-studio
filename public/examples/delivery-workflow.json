@@ -1,0 +1,562 @@
+{
+  "formatVersion": "1.0",
+  "id": "delivery-workflow",
+  "version": "1.0.0",
+  "title": "Design a delivery workflow",
+  "description": "A fictional example showing independent topics, nested conditions, prerequisites and source-aware decisions. Recommendations are examples, not approved policies.",
+  "locale": "en",
+  "direction": "ltr",
+  "nodes": [
+    {
+      "id": "strategy",
+      "kind": "group",
+      "title": "Delivery strategy"
+    },
+    {
+      "id": "operations",
+      "kind": "group",
+      "title": "Operations",
+      "parentId": "strategy"
+    },
+    {
+      "id": "release",
+      "kind": "group",
+      "title": "Release readiness",
+      "parentId": "strategy"
+    },
+    {
+      "id": "hosting",
+      "kind": "question",
+      "title": "Where does the workspace run?",
+      "prompt": "Should the first release be local-first or depend on a hosted service?",
+      "example": "A small team needs to review a decision document while travelling.",
+      "parentId": "strategy",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "local",
+          "label": "Local-first workspace",
+          "benefits": ["Works without a service account after the app is loaded."],
+          "risks": ["Backups and collaboration require explicit transfer."],
+          "example": "A reviewer keeps a session locally and sends an export when ready.",
+          "outcome": "A reviewer keeps a session locally and sends an export when ready.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "cloud",
+          "label": "Hosted workspace",
+          "benefits": ["Shared access can be centrally managed."],
+          "risks": [
+            "Authentication, operational ownership and data handling become release requirements."
+          ],
+          "example": "Reviewers open a shared service, subject to access control.",
+          "outcome": "Reviewers open a shared service, subject to access control.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "backups",
+      "kind": "question",
+      "title": "Local backup strategy",
+      "prompt": "How should local work be backed up?",
+      "example": "Browser storage may be cleared by the user or a device policy.",
+      "parentId": "hosting",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "export",
+          "label": "Explicit portable session export",
+          "benefits": ["The user controls when and where data leaves the browser."],
+          "risks": ["A user who never exports can lose their local workspace."],
+          "example": "The reviewer downloads a session after completing a section.",
+          "outcome": "The reviewer downloads a session after completing a section.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "managed",
+          "label": "Managed backup integration later",
+          "benefits": ["A future integration can automate a backup routine."],
+          "risks": ["That integration is not part of the first local release."],
+          "example": "The first release documents the missing managed-backup feature.",
+          "outcome": "The first release documents the missing managed-backup feature.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ],
+      "when": {
+        "mode": "all",
+        "rules": [
+          {
+            "questionId": "hosting",
+            "optionId": "local"
+          }
+        ]
+      }
+    },
+    {
+      "id": "backup-reminder",
+      "kind": "question",
+      "title": "Reminder placement",
+      "prompt": "When should a local backup reminder be shown?",
+      "example": "A reviewer has completed a whole topic since the last export.",
+      "parentId": "backups",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "topic",
+          "label": "After completing a topic",
+          "benefits": ["Prompts appear at a meaningful milestone."],
+          "risks": ["A long unfinished topic can still contain unsaved external backups."],
+          "example": "A quiet reminder appears when a section is completed.",
+          "outcome": "A quiet reminder appears when a section is completed.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "manual",
+          "label": "Only on explicit export actions",
+          "benefits": ["No interruptions during a review."],
+          "risks": ["The user must remember to make backups."],
+          "example": "A persistent export button stays available.",
+          "outcome": "A persistent export button stays available.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ],
+      "when": {
+        "mode": "all",
+        "rules": [
+          {
+            "questionId": "backups",
+            "optionId": "export"
+          }
+        ]
+      }
+    },
+    {
+      "id": "identity",
+      "kind": "question",
+      "title": "Hosted access control",
+      "prompt": "Which identity approach should a hosted release use?",
+      "example": "Different teams should not see each other’s private sessions.",
+      "parentId": "hosting",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "team",
+          "label": "Team-managed accounts",
+          "benefits": ["Revocation and ownership are explicit."],
+          "risks": ["An identity and authorization implementation is required."],
+          "example": "The release waits until tenant isolation and access tests pass.",
+          "outcome": "The release waits until tenant isolation and access tests pass.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "invite",
+          "label": "Invite-only pilot",
+          "benefits": ["The initial audience can be constrained."],
+          "risks": ["Invites are not a substitute for authorization tests."],
+          "example": "Only invited pilot accounts are provisioned.",
+          "outcome": "Only invited pilot accounts are provisioned.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ],
+      "when": {
+        "mode": "all",
+        "rules": [
+          {
+            "questionId": "hosting",
+            "optionId": "cloud"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data",
+      "kind": "question",
+      "title": "Sample or sensitive content?",
+      "prompt": "What content may the first demo include?",
+      "example": "The demo will be shared with people outside the project team.",
+      "parentId": "operations",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "sample",
+          "label": "Fictional sample data only",
+          "benefits": ["The demo avoids exposing real decisions and notes."],
+          "risks": ["Users need to import their own document to evaluate a real use case."],
+          "example": "Example company names and policies are fictional.",
+          "outcome": "Example company names and policies are fictional.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "reviewed",
+          "label": "Reviewed real data",
+          "benefits": ["The example is closer to a real workflow."],
+          "risks": ["Content owners must approve every shared fact and note."],
+          "example": "The demo waits for a documented content review.",
+          "outcome": "The demo waits for a documented content review.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "content-review",
+      "kind": "question",
+      "title": "Real-data release review",
+      "prompt": "Who approves real content before it enters a shared demo?",
+      "example": "A source document may contain internal comments or personal names.",
+      "parentId": "data",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "owner",
+          "label": "A named content owner",
+          "benefits": ["One responsible reviewer can approve the release scope."],
+          "risks": ["A named owner still needs a clear review checklist."],
+          "example": "The owner signs off on the exact exported document.",
+          "outcome": "The owner signs off on the exact exported document.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "pair",
+          "label": "Two reviewers",
+          "benefits": ["Independent review may catch missed details."],
+          "risks": ["Review requires more coordination."],
+          "example": "Two reviewers compare the same content snapshot.",
+          "outcome": "Two reviewers compare the same content snapshot.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ],
+      "when": {
+        "mode": "all",
+        "rules": [
+          {
+            "questionId": "data",
+            "optionId": "reviewed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "retention",
+      "kind": "question",
+      "title": "Local session retention",
+      "prompt": "Who controls when local sessions are removed?",
+      "example": "A reviewer wants to keep several projects but clear one completed session.",
+      "parentId": "operations",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "explicit",
+          "label": "Explicit user reset with confirmation",
+          "benefits": ["The action has a clear scope and can be preceded by an export."],
+          "risks": ["The user must manage old sessions."],
+          "example": "Reset clears the selected session while other projects remain.",
+          "outcome": "Reset clears the selected session while other projects remain.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "planned",
+          "label": "Design a retention policy before release",
+          "benefits": ["A policy can define a consistent retention period."],
+          "risks": ["Expiry behaviour needs consent, communication and tests."],
+          "example": "Automatic expiry is left out until its policy is approved.",
+          "outcome": "Automatic expiry is left out until its policy is approved.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "kind": "question",
+      "title": "Release evidence",
+      "prompt": "What evidence is needed before sharing the pilot?",
+      "example": "Automated tests pass but no keyboard or touch review has happened.",
+      "parentId": "release",
+      "revision": 1,
+      "dependsOn": ["hosting", "data"],
+      "options": [
+        {
+          "id": "tests-and-review",
+          "label": "Automated gates plus manual review",
+          "benefits": [
+            "Rendering and input issues can be checked separately from engine correctness."
+          ],
+          "risks": ["Manual review takes time and requires real environments."],
+          "example": "The release report distinguishes test results from browser and device checks.",
+          "outcome": "The release report distinguishes test results from browser and device checks.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "limited",
+          "label": "Explicitly limited technical preview",
+          "benefits": ["Feedback can start with accurately stated limitations."],
+          "risks": ["It must not be presented as a production-ready release."],
+          "example": "The README labels it an early preview and lists missing checks.",
+          "outcome": "The README labels it an early preview and lists missing checks.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "rollout",
+      "kind": "question",
+      "title": "Pilot rollout",
+      "prompt": "Should the pilot be opened to a small group first?",
+      "example": "A team wants feedback before inviting a broader audience.",
+      "parentId": "release",
+      "revision": 1,
+      "dependsOn": ["gate"],
+      "options": [
+        {
+          "id": "staged",
+          "label": "Small pilot first",
+          "benefits": ["Feedback can be acted on before broader distribution."],
+          "risks": ["Pilot success does not prove behaviour at every scale."],
+          "example": "Five reviewers test the documented workflows before a wider invitation.",
+          "outcome": "Five reviewers test the documented workflows before a wider invitation.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "open",
+          "label": "Open preview with clear boundaries",
+          "benefits": ["More people can try the tool."],
+          "risks": ["Incoming feedback can be harder to prioritize."],
+          "example": "A public preview lists supported and unsupported workflows.",
+          "outcome": "A public preview lists supported and unsupported workflows.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "pilot-check",
+      "kind": "question",
+      "title": "Hosted pilot check",
+      "prompt": "How will the hosted pilot establish its operational owner?",
+      "example": "A hosted pilot needs someone to review access and incidents.",
+      "parentId": "rollout",
+      "revision": 1,
+      "dependsOn": [],
+      "options": [
+        {
+          "id": "named",
+          "label": "Name an owner and review date",
+          "benefits": ["Ownership remains visible."],
+          "risks": ["The owner needs time and access to the necessary evidence."],
+          "example": "The pilot record names the owner and the next review date.",
+          "outcome": "The pilot record names the owner and the next review date.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "hold",
+          "label": "Hold the hosted pilot until ownership exists",
+          "benefits": ["No unattended hosted service is implied."],
+          "risks": ["The hosted route remains deferred operationally."],
+          "example": "The team continues with the local demo while hosting is planned.",
+          "outcome": "The team continues with the local demo while hosting is planned.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ],
+      "when": {
+        "mode": "all",
+        "rules": [
+          {
+            "questionId": "hosting",
+            "optionId": "cloud"
+          },
+          {
+            "questionId": "rollout",
+            "optionId": "staged"
+          }
+        ]
+      }
+    },
+    {
+      "id": "support",
+      "kind": "question",
+      "title": "Feedback channel",
+      "prompt": "Where should reproducible feedback go?",
+      "example": "A report should include the document shape and expected decision status.",
+      "parentId": "release",
+      "revision": 1,
+      "dependsOn": ["gate"],
+      "options": [
+        {
+          "id": "issues",
+          "label": "Repository issues with a minimal example",
+          "benefits": ["Reports can be linked to tests and fixes."],
+          "risks": ["Private documents must be removed from public reports."],
+          "example": "A contributor attaches a fictional minimal document.",
+          "outcome": "A contributor attaches a fictional minimal document.",
+          "recommended": true,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "internal",
+          "label": "An internal review queue",
+          "benefits": ["Private feedback can stay inside a team."],
+          "risks": ["External contributors cannot follow the same queue."],
+          "example": "The team summarizes confirmed issues into a sanitized tracker.",
+          "outcome": "The team summarizes confirmed issues into a sanitized tracker.",
+          "recommended": false,
+          "rationale": "Illustrative design trade-off for this sample. This is not a universal recommendation.",
+          "sourceIds": ["sample-analysis"]
+        },
+        {
+          "id": "later",
+          "label": "Leave this decision open",
+          "defer": true,
+          "benefits": ["Avoid approving an unsupported policy."],
+          "risks": ["Dependent decisions remain unresolved."],
+          "example": "This question stays deferred, not completed.",
+          "sourceIds": []
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "sample-analysis",
+      "kind": "analysis",
+      "title": "Illustrative sample rationale",
+      "claim": "These trade-offs were written for the demo. They do not claim a policy is used by any named organization."
+    }
+  ]
+}
