@@ -2,18 +2,16 @@ import { LocalizedSelect } from './LocalizedSelect';
 import { formatNumber } from '../lib/locale';
 import { useStore } from 'zustand';
 import { motion } from 'motion/react';
-import { ChevronDown, FileDown, FolderOpen, PanelTop, RotateCcw, Settings2 } from 'lucide-react';
+import { ChevronDown, FileDown, FolderOpen, RotateCcw, Settings2 } from 'lucide-react';
 import { workspaceStore } from '../state/workspace';
 import { Modal, Button } from './ui';
-import { examples } from '../data/examples';
-import type { DecisionDocument } from '../domain/schema';
 import type { Evaluation, Note, Session } from '../domain/engine';
 import type { Translate } from '../lib/i18n';
 
 export function WorkspaceMenu({
   open,
   onClose,
-  onLoad,
+  hasDocument,
   onImport,
   onExport,
   onDocument,
@@ -27,7 +25,7 @@ export function WorkspaceMenu({
 }: {
   open: boolean;
   onClose: () => void;
-  onLoad: (doc: DecisionDocument) => void;
+  hasDocument: boolean;
   onImport: () => void;
   onExport: () => void;
   onDocument: () => void;
@@ -55,20 +53,24 @@ export function WorkspaceMenu({
         <label className="sr-only" htmlFor="project-select">
           {t('projects')}
         </label>
-        <LocalizedSelect
-          id="project-select"
-          label={t('projects')}
-          value={active}
-          onValueChange={(value) => {
-            activate(value);
-            onClose();
-          }}
-          options={Object.values(documents).map((doc) => ({
-            value: doc.id,
-            label: doc.title,
-            direction: doc.direction,
-          }))}
-        />
+        {hasDocument ? (
+          <LocalizedSelect
+            id="project-select"
+            label={t('projects')}
+            value={active}
+            onValueChange={(value) => {
+              activate(value);
+              onClose();
+            }}
+            options={Object.values(documents).map((doc) => ({
+              value: doc.id,
+              label: doc.title,
+              direction: doc.direction,
+            }))}
+          />
+        ) : (
+          <p className="muted">{t('emptyWorkspace')}</p>
+        )}
         <Button onClick={onImport}>
           <FileDown size={16} />
           {t('import')}
@@ -90,7 +92,7 @@ export function WorkspaceMenu({
           <Settings2 size={18} />
           {t('settings')}
         </h3>
-        {(['minimap', 'dependencies', 'animations'] as const).map((key) => (
+        {(['minimap', 'dependencies', 'animations', 'showCanvasHelp'] as const).map((key) => (
           <label className="switch-row" key={key}>
             <span>{t(key)}</span>
             <input
@@ -102,24 +104,7 @@ export function WorkspaceMenu({
           </label>
         ))}
       </section>
-      <section className="menu-section">
-        <h3>
-          <PanelTop size={18} />
-          {t('examples')}
-        </h3>
-        {examples.map((doc) => (
-          <Button
-            className="full-width"
-            key={doc.id}
-            onClick={() => {
-              onLoad(doc);
-              onClose();
-            }}
-          >
-            {doc.title}
-          </Button>
-        ))}
-      </section>
+
       <details className="menu-section">
         <summary>
           <span>
@@ -153,12 +138,16 @@ export function WorkspaceMenu({
       </details>
       <section className="menu-section export-actions">
         <h3>{t('export')}</h3>
-        <Button className="primary" onClick={onExport}>
+        <Button className="primary" disabled={!hasDocument} onClick={onExport}>
           {t('export')}
         </Button>
-        <Button onClick={onDocument}>{t('exportDocument')}</Button>
-        <Button onClick={onCopy}>{t('copy')}</Button>
-        <Button className="danger quiet" onClick={onReset}>
+        <Button disabled={!hasDocument} onClick={onDocument}>
+          {t('exportDocument')}
+        </Button>
+        <Button disabled={!hasDocument} onClick={onCopy}>
+          {t('copy')}
+        </Button>
+        <Button className="danger quiet" disabled={!hasDocument} onClick={onReset}>
           <RotateCcw size={16} />
           {t('reset')}
         </Button>

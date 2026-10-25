@@ -5,13 +5,18 @@ import type { DecisionDocument } from '../domain/schema';
 import { emptySession, recordAnswer } from '../domain/engine';
 import type { Note, Session } from '../domain/engine';
 import { sessionSchema } from '../domain/transfer';
-import { launchExample } from '../data/examples';
 
 export const STORAGE_KEY = 'decision-tree-studio/workspace/v1';
 export type Language = 'en' | 'fa';
 type Theme = 'dark' | 'light';
-type Settings = { minimap: boolean; dependencies: boolean; animations: boolean };
+type Settings = {
+  minimap: boolean;
+  dependencies: boolean;
+  animations: boolean;
+  showCanvasHelp: boolean;
+};
 type Persisted = {
+  seedCleanupVersion: number;
   formatVersion: 1;
   documents: Record<string, DecisionDocument>;
   sessions: Record<string, Session>;
@@ -41,23 +46,30 @@ export type Workspace = Persisted & {
   setSetting: (key: keyof Settings, value: boolean) => void;
 };
 const persistedSchema = z.object({
+  seedCleanupVersion: z.number().int().min(0).max(1).default(0),
   formatVersion: z.literal(1),
   documents: z.record(z.string(), documentSchema),
   sessions: z.record(z.string(), sessionSchema),
   activeId: z.string(),
   theme: z.enum(['dark', 'light']),
   language: z.enum(['en', 'fa']),
-  settings: z.object({ minimap: z.boolean(), dependencies: z.boolean(), animations: z.boolean() }),
+  settings: z.object({
+    minimap: z.boolean(),
+    dependencies: z.boolean(),
+    animations: z.boolean(),
+    showCanvasHelp: z.boolean().default(true),
+  }),
 });
 function initial(): Persisted {
   return {
+    seedCleanupVersion: 1,
     formatVersion: 1,
-    documents: { [launchExample.id]: launchExample },
-    sessions: { [launchExample.id]: emptySession() },
-    activeId: launchExample.id,
+    documents: {},
+    sessions: {},
+    activeId: '',
     theme: 'dark',
     language: 'en',
-    settings: { minimap: true, dependencies: false, animations: true },
+    settings: { minimap: true, dependencies: false, animations: true, showCanvasHelp: true },
   };
 }
 function safeStorage(): Storage | undefined {
@@ -74,7 +86,8 @@ export function createWorkspaceStore(
   let saved = initial(),
     storageError = '',
     recoveryText = '',
-    blocked = false;
+    blocked = false,
+    migrated = false;
   try {
     const raw = storage?.getItem(STORAGE_KEY);
     if (raw) {
@@ -85,8 +98,21 @@ export function createWorkspaceStore(
         validateDocument(doc);
         if (!result.sessions[id]) throw new Error('Missing project session.');
       }
-      if (!result.documents[result.activeId] || !result.sessions[result.activeId])
-        throw new Error('Missing active project.');
+      const demoIds = ['delivery-workflow', 'delivery-workflow-fa'];
+      const removedActive = result.seedCleanupVersion === 0 && demoIds.includes(result.activeId);
+      if (result.seedCleanupVersion === 0) {
+        for (const id of demoIds) {
+          delete result.documents[id];
+          delete result.sessions[id];
+        }
+        result.seedCleanupVersion = 1;
+        migrated = true;
+      }
+      if (!result.documents[result.activeId]) {
+        if (removedActive || Object.keys(result.documents).length === 0)
+          result.activeId = Object.keys(result.documents)[0] ?? '';
+        else throw new Error('Missing active project.');
+      }
       saved = result;
       recoveryText = '';
     }
@@ -213,13 +239,31 @@ export function createWorkspaceStore(
       setSetting: (key, value) => set({ settings: { ...get().settings, [key]: value } }),
     };
   });
-  store.subscribe((state) => {
+  const persist = (state: Workspace) => {
     if (!storage || blocked) return;
-    const { formatVersion, documents, sessions, activeId, theme, language, settings } = state;
+    const {
+      seedCleanupVersion,
+      formatVersion,
+      documents,
+      sessions,
+      activeId,
+      theme,
+      language,
+      settings,
+    } = state;
     try {
       storage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ formatVersion, documents, sessions, activeId, theme, language, settings }),
+        JSON.stringify({
+          seedCleanupVersion,
+          formatVersion,
+          documents,
+          sessions,
+          activeId,
+          theme,
+          language,
+          settings,
+        }),
       );
     } catch {
       blocked = true;
@@ -228,7 +272,9 @@ export function createWorkspaceStore(
           'Saving failed: storage may be full or disabled. Export your session before leaving.',
       });
     }
-  });
+  };
+  store.subscribe(persist);
+  if (migrated) persist(store.getState());
   return store;
 }
 export const workspaceStore = createWorkspaceStore();

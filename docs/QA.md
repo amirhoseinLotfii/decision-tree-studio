@@ -5,7 +5,7 @@
 | Check           | Actual result                              |
 | --------------- | ------------------------------------------ |
 | `npm run lint`  | exit 0                                     |
-| `npm test`      | exit 0; 7 files / 53 tests                 |
+| `npm test`      | exit 0; 7 files / 54 tests                 |
 | `npm run build` | exit 0; TypeScript and production bundling |
 | `npm run check` | exit 0; sequential lint, tests, build      |
 
@@ -26,7 +26,7 @@ Node 24.22.1 was used. Build chunks were split by responsibility; the production
 
 DOM tests use jsdom; they are not Chrome or mobile-browser tests. Local browser control was unavailable in the current environment. Real viewport rendering, clipping/overflow, wheel/pinch behavior, real-browser outside-click dismissal, focus restoration through exit animations, screen-reader behavior, contrast and touch must still be checked in a real browser.
 
-The font and React Flow attribution are included in the built output. The concept SVG in the README is an illustration, not a screenshot of a verified runtime.
+Font and dependency license notices are included in the built output; UI attribution is hidden via the supported React Flow option. The concept SVG in the README is an illustration, not a screenshot of a verified runtime.
 
 The library accepts documents up to 5,000 nodes; the full size limit is not benchmarked or guaranteed usable on every device. Multi-tab concurrency and server-backed synchronization are not implemented.
 
@@ -50,6 +50,6 @@ Replaced the two native selects with the shadcn/Radix Select source component. A
 
 ## Repository presentation checks
 
-The published minimal starter and both downloadable workflow examples are validated by tests. Downloadable workflow definitions are compared with their bundled counterparts. Relative documentation links were checked (37 targets, no missing files at the time of release preparation). Source/docs were scanned for common GitHub token patterns, private-key markers, machine-specific user paths and the private prototype API/data names; no matches were found. This bounded scan is not a general security audit.
+The shipped example datasets have been removed. Current startup tests cover empty storage, one-time cleanup of only the former example IDs, preservation of a user project, selection of a surviving active project, and persistent dismissal of the canvas hint. Earlier validation of downloadable examples is historical and does not describe the current package.
 
 The README hero was inspected as a static image and labelled as concept artwork. The supplied social-preview image is 1280 × 640; uploading it to GitHub's social-preview setting is separate from committing the file.

@@ -13,7 +13,7 @@ Build a reusable React and TypeScript application from the existing local protot
 
 ## Boundaries
 
-The existing application and local user answers are untouched. No production repository, database, backend, user credentials, commercial font, personal notes or proprietary decision corpus is copied into tracked files. Demo evidence is explicitly illustrative. No automatic research, model inference, collaboration, authentication or server-side policy execution is claimed.
+The existing application and local user answers are untouched. No production repository, database, backend, user credentials, commercial font, personal notes or proprietary decision corpus is copied into tracked files. The workspace starts empty; user documents are imported locally and never bundled as project datasets. No automatic research, model inference, collaboration, authentication or server-side policy execution is claimed.
 
 ## Validation and stop conditions
 

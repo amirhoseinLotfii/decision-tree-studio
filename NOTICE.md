@@ -3,7 +3,7 @@
 Project code is MIT. Dependencies keep their own licenses and notices.
 
 - React, React DOM: MIT
-- React Flow (@xyflow/react): MIT; the default attribution remains visible.
+- React Flow (@xyflow/react): MIT; the UI attribution is hidden through the supported `proOptions.hideAttribution` setting. Package copyright/license notices are retained.
 - Dagre (@dagrejs/dagre): MIT
 - Zustand: MIT
 - Zod: MIT

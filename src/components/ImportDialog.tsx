@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { FileJson, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { Modal, Button } from './ui';
 import { parseDocument } from '../domain/schema';
 import type { DecisionDocument } from '../domain/schema';
 import type { Session } from '../domain/engine';
 import { importSession } from '../domain/transfer';
 import { readFile } from '../lib/files';
-import { launchExample } from '../data/examples';
 import type { Translate } from '../lib/i18n';
 
 export function ImportDialog({
@@ -19,7 +18,7 @@ export function ImportDialog({
   open: boolean;
   onClose: () => void;
   onLoad: (doc: DecisionDocument, session?: Session) => void;
-  current: DecisionDocument;
+  current?: DecisionDocument;
   t: Translate;
 }) {
   const [text, setText] = useState(''),
@@ -69,16 +68,7 @@ export function ImportDialog({
             }}
           />
         </label>
-        <Button
-          onClick={() => {
-            setText(JSON.stringify(launchExample, null, 2));
-            setError('');
-          }}
-        >
-          <FileJson size={16} />
-          {t('starter')}
-        </Button>
-        <Button onClick={() => setText(JSON.stringify(current, null, 2))}>
+        <Button disabled={!current} onClick={() => setText(JSON.stringify(current, null, 2))}>
           {t('exportDocument')}
         </Button>
       </div>

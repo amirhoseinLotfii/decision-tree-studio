@@ -95,4 +95,12 @@ describe('localized shadcn selects and interface direction', () => {
     expect(restored.documents.test?.direction).toBe('ltr');
     expect(formatNumber('fa', 12)).toBe('۱۲');
   });
+  it('shows an import-first empty workspace instead of seeded questions', () => {
+    workspaceStore.setState({ documents: {}, sessions: {}, activeId: '' });
+    render(<App />);
+    expect(screen.getAllByText('Your workspace is empty').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: 'Next question' })).toBeDisabled();
+    expect(screen.queryByTestId('graph')).not.toBeInTheDocument();
+    expect(document.querySelector('.progress-caption bdi')?.textContent).toBe('0 / 0');
+  });
 });

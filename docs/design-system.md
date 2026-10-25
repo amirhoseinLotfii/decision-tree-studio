@@ -11,3 +11,5 @@ Motion handles modal/sidebar entrance/exit, selected-option transitions, button 
 Automated DOM tests are not visual proof. Manual narrow-screen, zoom, contrast, touch and screen-reader testing remains required before a production accessibility claim.
 
 Select controls use the shadcn/Radix Select component and semantic theme tokens. Their menu surfaces render through portals with explicit interface direction, including logical placement of selection indicators. Tailwind utilities are scoped to the shadcn component sources, without enabling global preflight, so existing canvas and modal styles remain stable. UI language is independent of document language; importing content does not overwrite the current interface-language preference.
+
+The canvas controls hint has a close button; its visibility is persisted and can be restored in preferences. No library attribution link is shown in the viewport. Dependency license notices remain distributed.

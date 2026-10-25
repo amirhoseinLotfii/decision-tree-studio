@@ -33,7 +33,7 @@ import { WorkspaceMenu } from './components/WorkspaceMenu';
 import { ImportDialog } from './components/ImportDialog';
 import { NoteDialog } from './components/NoteDialog';
 import type { NoteRequest } from './components/NoteDialog';
-import { launchExample } from './data/examples';
+import { emptyWorkspace } from './domain/empty-workspace';
 const DecisionCanvas = lazy(() => import('./graph/DecisionCanvas'));
 type Confirmation = { title: string; description: string; confirm: () => void };
 const fallbackSession = emptySession();
@@ -47,7 +47,8 @@ export default function App() {
     settings = useStore(workspaceStore, (s) => s.settings),
     history = useStore(workspaceStore, (s) => s.history),
     storageError = useStore(workspaceStore, (s) => s.storageError);
-  const doc = documents[active] ?? launchExample,
+  const hasDocument = Boolean(documents[active]);
+  const doc = documents[active] ?? emptyWorkspace,
     session = sessions[active] ?? fallbackSession;
   const answers = session.answers;
   const result = useMemo(() => evaluate(doc, { answers }), [doc, answers]);
@@ -154,8 +155,9 @@ export default function App() {
       confirm: () => workspaceStore.getState().removeAnswer(id),
     });
   const selectedNode = selected ? (doc.nodes.find((n) => n.id === selected) ?? null) : null;
-  const answeredPercent =
-    result.total - result.counts.inactive > 0
+  const answeredPercent = !hasDocument
+    ? 0
+    : result.total - result.counts.inactive > 0
       ? Math.round((result.counts.answered / (result.total - result.counts.inactive)) * 100)
       : 100;
   return (
@@ -224,7 +226,7 @@ export default function App() {
                 <span className="eyebrow">
                   {doc.id} · {doc.version}
                 </span>
-                <h2>{doc.title}</h2>
+                <h2>{doc.title || t('emptyWorkspace')}</h2>
               </div>
               <div className="project-progress">
                 <div className="progress-caption">
@@ -241,6 +243,7 @@ export default function App() {
               </div>
               <Button
                 className="primary next-button"
+                disabled={!hasDocument}
                 onClick={() => {
                   const id = nextQuestion(doc, session);
                   if (id) {
@@ -323,7 +326,15 @@ export default function App() {
               </Button>
             </section>
             <section className="workspace-canvas" aria-label={t(view)}>
-              {view === 'graph' ? (
+              {!hasDocument ? (
+                <div className="workspace-empty">
+                  <h2>{t('emptyWorkspace')}</h2>
+                  <p>{t('emptyWorkspaceHelp')}</p>
+                  <Button className="primary" onClick={() => setImportOpen(true)}>
+                    {t('import')}
+                  </Button>
+                </div>
+              ) : view === 'graph' ? (
                 <Suspense
                   fallback={
                     <div className="canvas-loading" role="status">
@@ -400,7 +411,6 @@ export default function App() {
           <WorkspaceMenu
             open={menu}
             onClose={() => setMenu(false)}
-            onLoad={load}
             onImport={() => {
               setMenu(false);
               setImportOpen(true);
@@ -413,6 +423,7 @@ export default function App() {
             onReset={reset}
             onOpen={onOpen}
             onNote={onNote}
+            hasDocument={hasDocument}
             result={result}
             session={session}
             t={t}
@@ -420,7 +431,7 @@ export default function App() {
           <ImportDialog
             open={importOpen}
             onClose={() => setImportOpen(false)}
-            current={doc}
+            current={hasDocument ? doc : undefined}
             onLoad={load}
             t={t}
           />

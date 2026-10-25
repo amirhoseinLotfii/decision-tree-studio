@@ -20,3 +20,5 @@ Generic document import, conditional decision engine, dependency review, diagram
 - Optional adapters for collaboration, with explicit ownership and conflict rules.
 
 No automatic AI research or paid dependency is required for the current application.
+
+Runtime demonstration datasets were removed in 0.1.1. Start with an empty workspace and import host-owned data.

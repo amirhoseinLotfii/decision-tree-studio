@@ -1421,3 +1421,36 @@ progress::-moz-progress-bar {
 :root[data-animations='off'] [data-slot='select-content'] {
   animation: none !important;
 }
+
+.canvas-instructions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+.canvas-instructions[hidden] {
+  display: none;
+}
+.canvas-instructions button {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  padding: 5px;
+  border-radius: 4px;
+}
+.workspace-empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+.workspace-empty p {
+  color: var(--muted);
+  max-width: 500px;
+}

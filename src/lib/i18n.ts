@@ -1,5 +1,9 @@
 import type { Language } from '../state/workspace';
 const en = {
+  emptyWorkspace: 'Your workspace is empty',
+  emptyWorkspaceHelp:
+    'Import your JSON document to begin. No example projects are loaded automatically.',
+  showCanvasHelp: 'Show canvas controls hint',
   removeAnswerHelp:
     'Remove this answer? Dependent decisions may need review. You can undo this action.',
   removeNoteHelp: 'Remove this note? You can undo this action.',
@@ -115,6 +119,10 @@ const en = {
 };
 type Key = keyof typeof en;
 const fa: Record<Key, string> = {
+  emptyWorkspace: 'فضای کار خالی است',
+  emptyWorkspaceHelp:
+    'برای شروع، سند جیسون خودتان را وارد کنید. پروژهٔ نمونه خودکار بارگذاری نمی‌شود.',
+  showCanvasHelp: 'نمایش راهنمای کنترل نمودار',
   removeAnswerHelp:
     'این پاسخ حذف شود؟ تصمیم‌های وابسته نیازمند بازبینی می‌شوند. امکان بازگردانی وجود دارد.',
   removeNoteHelp: 'این یادداشت حذف شود؟ امکان بازگردانی وجود دارد.',

@@ -1,3 +1,4 @@
+import { CanvasHelp } from '../components/CanvasHelp';
 import { memo, useMemo } from 'react';
 import { ReactFlow, Background, Controls, MiniMap, Handle, Position } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
@@ -119,6 +120,7 @@ export default function DecisionCanvas({
         maxZoom={2.5}
         onlyRenderVisibleElements
         colorMode={theme}
+        proOptions={{ hideAttribution: true }}
         onNodeClick={(event, node) => {
           if (event.altKey) {
             if (node.data.noteId) onNote({ type: 'node', id: node.data.noteId });
@@ -143,7 +145,7 @@ export default function DecisionCanvas({
           />
         ) : null}
       </ReactFlow>
-      <div className="canvas-instructions">{t('controls')}</div>
+      <CanvasHelp t={t} />
     </div>
   );
 }

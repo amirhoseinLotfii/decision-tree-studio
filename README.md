@@ -62,14 +62,14 @@ The build is a static application in `dist/`. Serve it over HTTP(S) with a stati
 
 ## A two-minute walkthrough
 
-1. Open **Import / edit JSON** and load a starter or choose an example file.
+1. Open **Import / edit JSON** and choose your own document or session file.
 2. Use **Next question** to start with an available decision.
 3. Read the question, example, options, tradeoffs and source origin.
 4. Choose an option and press **Record answer**. The highlight alone does not save a decision.
 5. Explore a conditional branch. Inactive branches show why they do not apply.
 6. Add a note, then **Export session** or **Copy for review** from the workspace menu.
 
-Try the [minimal starter](public/examples/minimal-document.json), the [English workflow](public/examples/delivery-workflow.json) or the [Persian workflow](public/examples/delivery-workflow-fa.json). These are fictional author proposals, not company-endorsed policies.
+The workspace starts empty. No demonstration datasets or automatic projects are shipped. The small JSON snippet below documents the format; it is not loaded into your workspace.
 
 <details>
 <summary><strong>What does the document look like?</strong></summary>
@@ -158,7 +158,7 @@ npm run format:check
 
 [GitHub Actions](https://github.com/amirhoseinLotfii/decision-tree-studio/actions/workflows/validate.yml) runs the code checks on pushes and pull requests. The [QA report](docs/QA.md) distinguishes automated evidence from manual checks that are still pending.
 
-Version **0.1.0** is a runnable application, not a published component package. The JSON editor is its authoring interface; a visual drag-and-drop editor is a roadmap item. The current limits are 5,000 nodes, 5 MiB document imports and 20 MiB session imports. These are safety limits, not performance guarantees. Large graph profiling, real-browser mobile testing, screen-reader acceptance and multi-tab conflict handling remain future work.
+Version **0.1.1** is a runnable application, not a published component package. The JSON editor is its authoring interface; a visual drag-and-drop editor is a roadmap item. The current limits are 5,000 nodes, 5 MiB document imports and 20 MiB session imports. These are safety limits, not performance guarantees. Large graph profiling, real-browser mobile testing, screen-reader acceptance and multi-tab conflict handling remain future work.
 
 The app does not generate research, verify citations, synchronize users or enforce policy on your backend.
 

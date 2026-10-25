@@ -6,3 +6,11 @@ coverage/
 private/
 *.local
 .DS_Store
+
+# User imports, portable sessions and captured network data are not source code.
+*.studio.json
+*-session.json
+*.session.json
+*.har
+user-data/
+exports/
