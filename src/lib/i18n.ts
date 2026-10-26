@@ -1,5 +1,8 @@
 import type { Language } from '../state/workspace';
 const en = {
+  sectionOrder: 'Section order',
+  sectionOrderHelp:
+    'Start with section 1, then continue in document order. Resolve any prerequisite shown before recording an answer.',
   emptyWorkspace: 'Your workspace is empty',
   emptyWorkspaceHelp:
     'Import your JSON document to begin. No example projects are loaded automatically.',
@@ -119,6 +122,9 @@ const en = {
 };
 type Key = keyof typeof en;
 const fa: Record<Key, string> = {
+  sectionOrder: 'ترتیب شروع بخش‌ها',
+  sectionOrderHelp:
+    'از بخش ۱ شروع کنید و به‌ترتیب جلو بروید. اگر سؤالی پیش‌نیاز دارد، ابتدا همان پیش‌نیاز را پاسخ دهید.',
   emptyWorkspace: 'فضای کار خالی است',
   emptyWorkspaceHelp:
     'برای شروع، سند جیسون خودتان را وارد کنید. پروژهٔ نمونه خودکار بارگذاری نمی‌شود.',

@@ -1454,3 +1454,15 @@ progress::-moz-progress-bar {
   color: var(--muted);
   max-width: 500px;
 }
+
+.section-order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.section-order-list .button {
+  justify-content: flex-start;
+  text-align: start;
+  white-space: normal;
+}

@@ -1,3 +1,4 @@
+import { sectionOrder, numberedSection } from '../domain/section-order';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useStore } from 'zustand';
 import { Check, ExternalLink, FileText, Lightbulb, MessageSquare, ShieldAlert } from 'lucide-react';
@@ -177,7 +178,11 @@ export function QuestionDialog({
     <Modal
       open={open}
       onClose={onClose}
-      title={node.title}
+      title={
+        node.kind === 'group'
+          ? numberedSection(node.title, sectionOrder(doc).get(node.id), doc.locale)
+          : node.title
+      }
       description={question?.prompt ?? t('groupHelp')}
       wide
     >
@@ -200,7 +205,9 @@ export function QuestionDialog({
                 .filter((n) => n.parentId === node.id)
                 .map((n) => (
                   <Button key={n.id} onClick={() => onOpen(n.id)}>
-                    {n.title}
+                    {n.kind === 'group'
+                      ? numberedSection(n.title, sectionOrder(doc).get(n.id), doc.locale)
+                      : n.title}
                   </Button>
                 ))}
             </div>

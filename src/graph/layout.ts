@@ -1,3 +1,4 @@
+import { sectionOrder, numberedSection } from '../domain/section-order';
 import { graphlib, layout } from '@dagrejs/dagre';
 import type { Node, Edge } from '@xyflow/react';
 import type { DecisionDocument } from '../domain/schema';
@@ -25,6 +26,7 @@ export function buildGraph(
   noteCounts: Record<string, number>,
   showDependencies: boolean,
 ): { nodes: StudioNode[]; edges: StudioEdge[] } {
+  const sections = sectionOrder(doc);
   const nodes: StudioNode[] = [],
     edges: StudioEdge[] = [];
   const g = new graphlib.Graph()
@@ -62,7 +64,10 @@ export function buildGraph(
     add(
       node.id,
       {
-        title: node.title,
+        title:
+          node.kind === 'group'
+            ? numberedSection(node.title, sections.get(node.id), doc.locale)
+            : node.title,
         subtitle: node.id,
         kind: node.kind,
         status:

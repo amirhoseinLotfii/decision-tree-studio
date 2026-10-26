@@ -1,3 +1,4 @@
+import { sectionOrder, numberedSection } from '../domain/section-order';
 import { LocalizedSelect } from './LocalizedSelect';
 import { formatNumber } from '../lib/locale';
 import { useStore } from 'zustand';
@@ -43,6 +44,8 @@ export function WorkspaceMenu({
     activate = useStore(workspaceStore, (s) => s.activate),
     settings = useStore(workspaceStore, (s) => s.settings),
     setSetting = useStore(workspaceStore, (s) => s.setSetting);
+  const doc = documents[active];
+  const sections = doc ? sectionOrder(doc) : new Map<string, string>();
   return (
     <Modal open={open} onClose={onClose} title={t('menu')} description={t('privacy')} side>
       <section className="menu-section">
@@ -76,6 +79,27 @@ export function WorkspaceMenu({
           {t('import')}
         </Button>
       </section>
+      {doc ? (
+        <section className="menu-section">
+          <h3>{t('sectionOrder')}</h3>
+          <p className="muted">{t('sectionOrderHelp')}</p>
+          <div className="section-order-list">
+            {doc.nodes
+              .filter((n) => n.kind === 'group' && sections.has(n.id))
+              .map((n) => (
+                <Button
+                  key={n.id}
+                  onClick={() => {
+                    onOpen(n.id);
+                    onClose();
+                  }}
+                >
+                  {numberedSection(n.title, sections.get(n.id), language)}
+                </Button>
+              ))}
+          </div>
+        </section>
+      ) : null}
       <section className="menu-section">
         <h3>{t('progress')}</h3>
         <div className="status-grid">
